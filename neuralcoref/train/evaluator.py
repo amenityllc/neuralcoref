@@ -8,9 +8,9 @@ import pickle
 import torch
 from torch.utils.data import DataLoader
 
-from neuralcoref.train.conllparser import FEATURES_NAMES
-from neuralcoref.train.dataset import NCBatchSampler, padder_collate
-from neuralcoref.train.compat import unicode_
+from train.conllparser import FEATURES_NAMES
+from train.dataset import NCBatchSampler, padder_collate
+from train.compat import unicode_
 
 PACKAGE_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 

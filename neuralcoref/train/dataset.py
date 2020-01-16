@@ -10,7 +10,7 @@ import torch.utils.data
 from torch.utils.data.sampler import Sampler
 from torch.utils.data import Dataset
 
-from neuralcoref.train.utils import (
+from train.utils import (
     encode_distance,
     BATCH_SIZE_PATH,
     SIZE_FP,
@@ -21,7 +21,7 @@ from neuralcoref.train.utils import (
     SIZE_PAIR_IN,
     SIZE_SINGLE_IN,
 )
-from neuralcoref.train.conllparser import FEATURES_NAMES
+from train.conllparser import FEATURES_NAMES
 
 
 def load_embeddings_from_file(name):

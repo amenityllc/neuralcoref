@@ -13,8 +13,8 @@ import numpy as np
 
 from tqdm import tqdm
 
-from neuralcoref.train.compat import unicode_
-from neuralcoref.train.document import (
+from train.compat import unicode_
+from train.document import (
     Mention,
     Document,
     Speaker,
@@ -22,7 +22,7 @@ from neuralcoref.train.document import (
     MISSING_WORD,
     extract_mentions_spans,
 )
-from neuralcoref.train.utils import parallel_process
+from train.utils import parallel_process
 
 PACKAGE_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 REMOVED_CHAR = ["/", "%", "*"]

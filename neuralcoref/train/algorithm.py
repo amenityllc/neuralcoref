@@ -6,9 +6,9 @@ import os
 import spacy
 import numpy as np
 
-from neuralcoref.train.utils import PACKAGE_DIRECTORY, SIZE_SINGLE_IN
-from neuralcoref.train.compat import unicode_
-from neuralcoref.train.document import Document, MENTION_TYPE, NO_COREF_LIST
+from train.utils import PACKAGE_DIRECTORY, SIZE_SINGLE_IN
+from train.compat import unicode_
+from train.document import Document, MENTION_TYPE, NO_COREF_LIST
 
 #######################
 ##### UTILITIES #######

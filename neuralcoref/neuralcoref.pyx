@@ -41,7 +41,15 @@ from thinc.v2v import Model, ReLu, Affine
 from thinc.api import chain, clone
 # from thinc.neural.util import get_array_module
 
-from .file_utils import NEURALCOREF_MODEL_PATH
+NEURALCOREF_CACHE = os.getenv(
+    "NEURALCOREF_CACHE", os.path.join(os.path.expanduser("~"), ".neuralcoref_cache")
+)
+
+NEURALCOREF_MODEL_URL = (
+    "https://s3.amazonaws.com/models.huggingface.co/neuralcoref/neuralcoref.tar.gz"
+)
+NEURALCOREF_MODEL_PATH = os.path.join(str(NEURALCOREF_CACHE), "neuralcoref")
+# from .file_utils import NEURALCOREF_MODEL_PATH
 
 ##############################
 ## DEFAULT INFERENCE VALUES ##

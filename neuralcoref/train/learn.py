@@ -14,8 +14,8 @@ from torch.optim import RMSprop
 from torch.utils.data import DataLoader
 from tensorboardX import SummaryWriter
 
-from neuralcoref.train.model import Model
-from neuralcoref.train.dataset import (
+from train.model import Model
+from train.dataset import (
     NCDataset,
     NCBatchSampler,
     load_embeddings_from_file,
@@ -23,8 +23,8 @@ from neuralcoref.train.dataset import (
     SIZE_PAIR_IN,
     SIZE_SINGLE_IN,
 )
-from neuralcoref.train.utils import SIZE_EMBEDDING
-from neuralcoref.train.evaluator import ConllEvaluator
+from train.utils import SIZE_EMBEDDING
+from train.evaluator import ConllEvaluator
 
 PACKAGE_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 STAGES = ["allpairs", "toppairs", "ranking"]
