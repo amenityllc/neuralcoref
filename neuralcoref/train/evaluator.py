@@ -4,7 +4,6 @@ import os
 import subprocess
 import io
 import pickle
-import numpy as np
 
 import torch
 from torch.utils.data import DataLoader
@@ -161,11 +160,6 @@ class ConllEvaluator(object):
     ########################
     def get_max_score(self, batch, debug=False):
         inputs, mask = batch
-        print("\ttype inputs: ", type(inputs))
-        print("\tlen inputs: ", len(inputs))
-        print("\tinputs[2] shape: ", inputs[2].shape)
-        print("\tinputs[2]: ", inputs[2])
-        print("\tmask: ", mask.shape)
         if self.cuda:
             inputs = tuple(i.cuda() for i in inputs)
             mask = mask.cuda()
@@ -209,7 +203,7 @@ class ConllEvaluator(object):
                         ind < n_pairs
                     ):  # the single score is not the highest, we have a match !
                         prev_idx = m_idx - n_pairs + ind
-                        if debug is not None and m_idx % 22 == 0 and (
+                        if debug is not None and m_idx % 39 == 0 and (
                             debug == -1 or debug == prev_idx or debug == m_idx
                         ):
                             m1_doc, m1_idx = self.flat_m_idx[m_idx]

@@ -1,4 +1,5 @@
-import pandas as pd
+import os
+import json
 
 
 OUTPUT_COLS = [
@@ -19,21 +20,31 @@ OUTPUT_COLS = [
     'ceafe_f1',
     'F1_conll'
 ]
+RUNS_DIR = 'runs'
+
 
 class ScoringResultStorage:
-    def __init__(self, score, timestamp):
+    @classmethod
+    def save(cls, score, meta):
+        storage = ScoringResultStorage(score, meta)
+        storage.build_result()
+        storage.store_result()
+
+    def __init__(self, score, meta):
         self.scoring_result = dict.fromkeys(OUTPUT_COLS)
         self.evaluator_score = score
-        self.timestamp = timestamp
+        self.meta = meta
+        output_dir_name = f'{self.meta["timestr"]}_{self.meta["dataset"]}'
+        self.output_path = os.path.join(RUNS_DIR, output_dir_name)
 
     def build_result(self):
         # populate metdata
-        self.scoring_result['dataset'] = DATASET_NAME
-        self.scoring_result['test_file'] = ALL_MENTIONS_PATH
-        self.scoring_result['time'] = time.strptime(timestr, "%Y%m%d-%H%M%S")
+        self.scoring_result['dataset'] = self.meta['dataset']
+        self.scoring_result['test_file'] = self.meta['mentions_path']
+        self.scoring_result['timestamp'] = self.meta['timestr']
 
         # populate scores
-        score, F1_conll, ident = self.sevaluator_scorecore
+        score, F1_conll, ident = self.evaluator_score
 
         for metric in ['muc', 'bcub', 'ceafe']:
             for measure_name, measure_score  in zip(['precision', 'recall', 'f1'], score[metric]):
@@ -43,6 +54,5 @@ class ScoringResultStorage:
 
 
     def store_result(self):
-        df_result = pd.DataFrame(self.scoring_result)
-        df_result.to_csv('df_output')
-
+        with open(f'{RUNS_DIR}/scores.txt', 'a') as fd:
+            fd.write(json.dumps(self.scoring_result))
