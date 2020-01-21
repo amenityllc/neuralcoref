@@ -4,6 +4,7 @@ import os
 import subprocess
 import io
 import pickle
+import numpy as np
 
 import torch
 from torch.utils.data import DataLoader
@@ -160,6 +161,11 @@ class ConllEvaluator(object):
     ########################
     def get_max_score(self, batch, debug=False):
         inputs, mask = batch
+        print("\ttype inputs: ", type(inputs))
+        print("\tlen inputs: ", len(inputs))
+        print("\tinputs[2] shape: ", inputs[2].shape)
+        print("\tinputs[2]: ", inputs[2])
+        print("\tmask: ", mask.shape)
         if self.cuda:
             inputs = tuple(i.cuda() for i in inputs)
             mask = mask.cuda()
@@ -171,7 +177,8 @@ class ConllEvaluator(object):
                 dim=1
             )  # We may want to weight the single score with coref.greedyness
         if debug:
-            print("Max_idx", max_idx)
+            print("\tScores", scores.shape, scores)
+            print("\tMax_idx", max_idx.shape, max_idx)
         return scores.cpu().numpy(), max_idx.cpu().numpy()
 
     def test_model(self):
@@ -196,21 +203,22 @@ class ConllEvaluator(object):
             for sample_batched, mentions_idx, n_pairs_l in zip(
                 self.dataloader, self.mentions_idx, self.n_pairs
             ):
-                scores, max_i = self.get_max_score(sample_batched)
+                scores, max_i = self.get_max_score(sample_batched, debug=debug)
                 for m_idx, ind, n_pairs in zip(mentions_idx, max_i, n_pairs_l):
                     if (
                         ind < n_pairs
                     ):  # the single score is not the highest, we have a match !
                         prev_idx = m_idx - n_pairs + ind
-                        if debug is not None and (
+                        if debug is not None and m_idx % 22 == 0 and (
                             debug == -1 or debug == prev_idx or debug == m_idx
                         ):
                             m1_doc, m1_idx = self.flat_m_idx[m_idx]
                             m1 = self.docs[m1_doc]["mentions"][m1_idx]
                             m2_doc, m2_idx = self.flat_m_idx[prev_idx]
                             m2 = self.docs[m2_doc]["mentions"][m2_idx]
+                            assert m1_doc == m2_doc
                             print(
-                                "We have a match between:",
+                                "\tWe have a match between:",
                                 m1,
                                 "(" + str(m1_idx) + ")",
                                 "and:",
@@ -297,11 +305,12 @@ class ConllEvaluator(object):
                 print(err.output)
                 raise
             if debug:
-                print("scorer_out", scorer_out)
+                print("scorer_out:\n", scorer_out)
             value, ident = scorer_out.split("\n")[-2], scorer_out.split("\n")[-1]
             if debug:
                 print("value", value, "identification", ident)
             NR, DR, NP, DP = [float(x) for x in value.split(" ")]
+            print(f"NR={NR}, DR={DR}, NP={NP}, DP={DP}")
             ident_NR, ident_DR, ident_NP, ident_DP = [
                 float(x) for x in ident.split(" ")
             ]

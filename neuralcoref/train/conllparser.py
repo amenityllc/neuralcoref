@@ -1,9 +1,12 @@
 """Conll parser"""
-
+import sys
+import os
+PACKAGE_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(PACKAGE_DIRECTORY))
+print(sys.path)
 import re
 import argparse
 import time
-import os
 import io
 import pickle
 
@@ -24,7 +27,6 @@ from train.document import (
 )
 from train.utils import parallel_process
 
-PACKAGE_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 REMOVED_CHAR = ["/", "%", "*"]
 NORMALIZE_DICT = {
     "/.": ".",
