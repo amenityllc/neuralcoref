@@ -1,5 +1,5 @@
 """Conll training algorithm"""
-
+from pprint import pprint as pp
 import os
 import time
 import argparse
@@ -133,7 +133,7 @@ def run_model(args):
     # Load datasets and embeddings
     embed_path = args.weights if args.weights is not None else args.train
     tensor_embeddings, voc = load_embeddings_from_file(embed_path + "tuned_word")
-    dataset = NCDataset(args.train, args)
+    # dataset = NCDataset(args.train, args)
     eval_dataset = NCDataset(args.eval, args)
     print("Vocabulary:", len(voc))
 
@@ -168,13 +168,15 @@ def run_model(args):
     eval_evaluator = ConllEvaluator(
         model, eval_dataset, args.eval, args.evalkey, embed_path, args
     )
-    train_evaluator = ConllEvaluator(
-        model, dataset, args.train, args.trainkey, embed_path, args
-    )
+    # train_evaluator = ConllEvaluator(
+    #     model, dataset, args.train, args.trainkey, embed_path, args
+    # )
     print("🏝 Testing evaluator and getting first eval score")
     eval_evaluator.test_model()
+    print("-------" * 10)
     start_time = time.time()
     eval_evaluator.build_test_file()
+    print("+++++++" * 10)
     score, f1_conll, ident = eval_evaluator.get_score()
     elapsed = time.time() - start_time
     print(f"|| s/evaluation {elapsed:5.2f}")
@@ -200,6 +202,7 @@ def run_model(args):
     )
     mentions_idx, n_pairs = batch_sampler.get_batch_info()
 
+    raise "NO TRAINING!!!"
     print("🏝 Start training")
     g_step = 0
     start_from = (
@@ -562,4 +565,5 @@ if __name__ == "__main__":
     args.train = args.train + "/numpy/"
     args.eval = args.eval + "/numpy/"
     print(args)
+    pp(vars(args))
     run_model(args)

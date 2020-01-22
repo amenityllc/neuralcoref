@@ -15,7 +15,7 @@ from train.compat import unicode_
 PACKAGE_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
 OUT_PATH = os.path.join(PACKAGE_DIRECTORY, "test_corefs.txt")  # fernandes.txt")#
-ALL_MENTIONS_PATH = os.path.join(PACKAGE_DIRECTORY, "test_mentions.txt")
+ALL_MENTIONS_PATH = os.path.join(PACKAGE_DIRECTORY, "___test_mentions.txt")
 # KEY_PATH = os.path.join(PACKAGE_DIRECTORY, "conll-2012-test-test-key.txt")
 SCORING_SCRIPT = os.path.join(PACKAGE_DIRECTORY, "scorer_wrapper.pl")
 
@@ -170,15 +170,12 @@ class ConllEvaluator(object):
             _, max_idx = scores.max(
                 dim=1
             )  # We may want to weight the single score with coref.greedyness
-        if debug:
-            print("\tScores", scores.shape, scores)
-            print("\tMax_idx", max_idx.shape, max_idx)
         return scores.cpu().numpy(), max_idx.cpu().numpy()
 
-    def test_model(self):
+    def test_model(self, path=ALL_MENTIONS_PATH):
         print("🌋 Test evaluator / print all mentions")
-        self.build_test_file(out_path=ALL_MENTIONS_PATH, print_all_mentions=True)
-        self.get_score(file_path=ALL_MENTIONS_PATH)
+        self.build_test_file(out_path=path, print_all_mentions=True)
+        return self.get_score(file_path=path)
 
     def build_test_file(
         self,
@@ -203,7 +200,7 @@ class ConllEvaluator(object):
                         ind < n_pairs
                     ):  # the single score is not the highest, we have a match !
                         prev_idx = m_idx - n_pairs + ind
-                        if debug is not None and m_idx % 39 == 0 and (
+                        if debug is not None and False and (
                             debug == -1 or debug == prev_idx or debug == m_idx
                         ):
                             m1_doc, m1_idx = self.flat_m_idx[m_idx]

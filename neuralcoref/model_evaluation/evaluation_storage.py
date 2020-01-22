@@ -6,7 +6,7 @@ OUTPUT_COLS = [
     # experiment details
     'dataset',
     'test_file',
-    'time',
+    'timestamp',
 
     # scores
     'muc_precision',
@@ -20,7 +20,7 @@ OUTPUT_COLS = [
     'ceafe_f1',
     'F1_conll'
 ]
-RUNS_DIR = 'runs'
+RUNS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'runs')
 
 
 class ScoringResultStorage:
@@ -42,6 +42,7 @@ class ScoringResultStorage:
         self.scoring_result['dataset'] = self.meta['dataset']
         self.scoring_result['test_file'] = self.meta['mentions_path']
         self.scoring_result['timestamp'] = self.meta['timestr']
+        self.scoring_result['args'] = self.meta['args']
 
         # populate scores
         score, F1_conll, ident = self.evaluator_score
@@ -54,5 +55,7 @@ class ScoringResultStorage:
 
 
     def store_result(self):
+        print('appending score result...')
         with open(f'{RUNS_DIR}/scores.txt', 'a') as fd:
-            fd.write(json.dumps(self.scoring_result))
+            fd.write("\n"+json.dumps(self.scoring_result))
+        print('done.')
